@@ -8,7 +8,7 @@ export default function Experience() {
       <div className="container">
         <SectionHeader
           eyebrow="Experience"
-          title="Reverse-chronological, because that's how careers actually read."
+          title="The journey so far, and it's just getting started."
         />
 
         <div style={{ marginTop: 50, display: "flex", flexDirection: "column" }}>
