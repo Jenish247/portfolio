@@ -77,19 +77,7 @@ export default function GeoRadar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target, duration, mode, phase]);
 
-  // After a game-over flash, reset and start a fresh round (still in game mode).
-  useEffect(() => {
-    if (mode !== "game" || phase !== "gameover") return;
-    const t = setTimeout(() => {
-      setScore(0);
-      cx.set(CENTER.x);
-      cy.set(CENTER.y);
-      setTarget(randomEdgePoint());
-      setPhase("playing");
-    }, 1100);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, phase]);
+  
 
   useEffect(() => {
     if (score > best) {
@@ -121,7 +109,13 @@ export default function GeoRadar() {
     cy.set(CENTER.y);
     setTarget(randomEdgePoint());
   }
-
+  function handleRetry() {
+    setScore(0);
+    cx.set(CENTER.x);
+    cy.set(CENTER.y);
+    setTarget(randomEdgePoint());
+    setPhase("playing");
+  }
   function handleEndGame() {
     setMode("idle");
     setPhase("playing");
@@ -292,7 +286,28 @@ export default function GeoRadar() {
               <span style={{ opacity: 0.5 }}> · best {String(best).padStart(2, "0")}</span>
             </div>
             {isGameOver ? (
-              <div style={{ color: "var(--coral)" }}>signal lost — resetting…</div>
+              <>
+                <div style={{ color: "var(--coral)" }}>signal lost</div>
+                <motion.button
+                  onClick={handleRetry}
+                  data-cursor
+                  animate={{ scale: [1, 1.045, 1] }}
+                  transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 11.5,
+                    color: "var(--mint)",
+                    border: "1px solid rgba(47, 230, 160, 0.4)",
+                    background: "rgba(47, 230, 160, 0.06)",
+                    borderRadius: 999,
+                    padding: "7px 14px",
+                    cursor: "pointer",
+                    letterSpacing: "0.02em",
+                  }}
+                >
+                  wanna give it one more try? →
+                </motion.button>
+              </>
             ) : (
               score === 0 && <div style={{ opacity: 0.6 }}>catch it before it hits the boundary</div>
             )}
